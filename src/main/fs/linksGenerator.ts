@@ -42,7 +42,7 @@ export const getFileHref = (filePath: string) => {
   return normalizedPath;
 };
 
-export const generateJson = (inputPath: string) => {
+export const generateFields = (inputPath: string) => {
   const splitPath = inputPath.split('\\');
   const { length } = splitPath;
   const monthNumber = splitPath[length - 1];

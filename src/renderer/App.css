@@ -21,11 +21,11 @@ body {
 
 button {
   background-color: white;
-  padding: 10px 20px;
+  padding: 5px 10px;
   border-radius: 10px;
   border: none;
   appearance: none;
-  font-size: 1.3rem;
+  font-size: 1rem;
   box-shadow: 0px 8px 28px -6px rgba(24, 39, 75, 0.12),
     0px 18px 88px -4px rgba(24, 39, 75, 0.14);
   transition: all ease-in 0.1s;
@@ -52,6 +52,13 @@ a {
 a:hover {
   opacity: 1;
   text-decoration: none;
+}
+
+.input-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .input {
@@ -90,4 +97,36 @@ a:hover {
 
 .hide {
   visibility: hidden;
+}
+
+.explorer-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.explorer-files {
+  border: 2px solid white;
+  border-radius: 5px;
+  padding: 0 1rem;
+  width: 100px;
+  margin-top: 1rem;
+}
+
+.textarea-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.textarea {
+  border-radius: 5px;
+  padding: 10px;
+  max-width: 100%;
+  line-height: 1.5;
+  border: 2px solid #7a2c9e;
+  background: rgb(223,151,25);
+  background: linear-gradient(337deg, rgba(223,151,25,1) 0%, rgba(221,87,137,1) 32%, rgba(122,44,158,1) 100%); 
+  color: white;
 }

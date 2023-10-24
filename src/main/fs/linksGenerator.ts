@@ -1,5 +1,9 @@
 import { modifiedFiles } from './fileSystem';
 
+type MonthNames = {
+  [key: string]: string;
+};
+
 export const generateLink = (
   href: string,
   day: string | number,
@@ -21,12 +25,11 @@ export const generateLinks = (files: modifiedFiles[]) => {
     const splitHref = href.split('/');
     const day = splitHref[splitHref.length - 1].split('.')[0];
     const monthNumber = splitHref[splitHref.length - 2];
-    const monthName = getMonthNumber(monthNumber)
+    const monthName = getMonthName(monthNumber, true);
     const correctLink = generateLink(href, day, monthName!);
     links += correctLink;
-    links += `\n<hr />`;
     links += '\n\n';
-
+    links += `<hr />\n`;
   });
   return links;
 };
@@ -38,11 +41,22 @@ export const getFileHref = (filePath: string) => {
   return normalizedPath;
 };
 
-type MonthNames = {
-  [key: string]: string;
+export const generateTitle = (inputPath: string) => {
+  const splitPath = inputPath.split('\\');
+  const { length } = splitPath;
+  const monthNumber = splitPath[length - 1];
+  const year = splitPath[length - 3];
+  const monthName = getMonthName(monthNumber, false);
+
+  return `${year} - ${monthNumber} (${monthName})`;
 };
 
-function getMonthNumber(monthNumber: string) {
+const generateAnnoucment = (inputPath: string) => {
+  const title = generateTitle(inputPath);
+  return `<p>Архив газет: ${title}</p>\n`;
+};
+
+function getMonthName(monthNumber: string, isGenitive: boolean) {
   const monthNames: MonthNames = {
     '01': 'Январь',
     '02': 'Февраль',
@@ -58,7 +72,25 @@ function getMonthNumber(monthNumber: string) {
     '12': 'Декабрь',
   };
 
-  const normalizedMonthName = monthNumber.toLowerCase().trim();
+  const monthNamesGenitive: MonthNames = {
+    '01': 'Января',
+    '02': 'Февраля',
+    '03': 'Марта',
+    '04': 'Апреля',
+    '05': 'Мая',
+    '06': 'Июня',
+    '07': 'Июля',
+    '08': 'Августа',
+    '09': 'Сентября',
+    '10': 'Октября',
+    '11': 'Ноября',
+    '12': 'Декабря',
+  };
+  const normalizedMonthName = monthNumber.trim();
+
+  if (isGenitive) {
+    return monthNamesGenitive[normalizedMonthName] || null;
+  }
 
   return monthNames[normalizedMonthName] || null;
 }

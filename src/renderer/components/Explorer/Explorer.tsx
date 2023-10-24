@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getFiles, modifiedFiles } from '../../../main/fs/fileSystem';
 import { ExplorerFile } from './ExplorerFile/ExplorerFile';
-import { generateLinks } from '../../../main/fs/linksGenerator';
+import { generateLinks, generateTitle } from '../../../main/fs/linksGenerator';
 
 export function Explorer() {
   const basePath = `\\\\Misha\\архив газет и журналов для сайта\\arhiv\\`;
@@ -13,7 +13,6 @@ export function Explorer() {
 
   const checkFiles = (files: modifiedFiles[]) => {
     const cheskIsFiles = files.every((file) => file.isDir === false);
-    console.log(cheskIsFiles);
     setIsShowGenerate(cheskIsFiles);
   };
   const handleClickLoadButton = async () => {
@@ -32,7 +31,9 @@ export function Explorer() {
   const handleClickGenButton = () => {
     const links = generateLinks(files);
     console.log(links);
-  }
+    const title = generateTitle(pathInput);
+    console.log('title', title);
+  };
 
   const handleClickFile = (newPath: string) => {
     console.log(pathInput);
@@ -49,7 +50,12 @@ export function Explorer() {
       <div className="control">
         <div className="control-buttons">
           <button onClick={handleClickLoadButton}>Load</button>
-          <button onClick={handleClickGenButton} className={isShowGenerate ? '' : 'hide'}>Generate</button>
+          <button
+            onClick={handleClickGenButton}
+            className={isShowGenerate ? '' : 'hide'}
+          >
+            Generate
+          </button>
         </div>
         <div>
           <input
@@ -60,18 +66,22 @@ export function Explorer() {
           />
         </div>
       </div>
-      <div>
-        {files.length > 0 &&
-          files.map((file) => (
-            <ExplorerFile
-              name={file.name}
-              path={`${file.path}`}
-              isDir={file.isDir}
-              onClick={handleClickFile}
-              key={file.name}
-            />
-          ))}
+      <div className="">
+        <div />
+        <div>
+          {files.length > 0 &&
+            files.map((file) => (
+              <ExplorerFile
+                name={file.name}
+                path={`${file.path}`}
+                isDir={file.isDir}
+                onClick={handleClickFile}
+                key={file.name}
+              />
+            ))}
+        </div>
       </div>
+
       <div />
     </div>
   );

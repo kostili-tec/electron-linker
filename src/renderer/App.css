@@ -58,6 +58,8 @@ a:hover {
   margin-left: 1rem;
   width: 600px;
   padding: 4px;
+  border-radius: 5px;
+  border: 1px solid #fce980;
 }
 
 .file {

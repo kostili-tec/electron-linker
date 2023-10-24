@@ -12,7 +12,12 @@ export const getFiles = async (pathFiles: string) => {
     const result = await fs.readdir(pathFiles, {
       withFileTypes: true,
     });
-    const modified: modifiedFiles[] = result.map((el) => {
+
+    const filteredResult = result.filter((file) => {
+      const fileName = path.basename(file.name).split('.')[0];
+      return !fileName.includes('d');
+    });
+    const modified: modifiedFiles[] = filteredResult.map((el) => {
       return {
         name: el.name,
         path: path.resolve(pathFiles, el.name),

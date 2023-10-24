@@ -31,7 +31,8 @@ export const generateLinks = (files: modifiedFiles[]) => {
     links += '\n\n';
     links += `<hr />\n`;
   });
-  return links;
+  const linksObject = { links };
+  return linksObject;
 };
 
 export const getFileHref = (filePath: string) => {
@@ -41,19 +42,67 @@ export const getFileHref = (filePath: string) => {
   return normalizedPath;
 };
 
-export const generateTitle = (inputPath: string) => {
+export const generateJson = (inputPath: string) => {
   const splitPath = inputPath.split('\\');
   const { length } = splitPath;
   const monthNumber = splitPath[length - 1];
   const year = splitPath[length - 3];
-  const monthName = getMonthName(monthNumber, false);
+  const name = splitPath[length - 2];
 
+  console.log(generateDate(year, monthNumber));
+  const title = generateTitle(year, monthNumber);
+  const annoucment = generateAnnoucment(title);
+  const date = generateDate(year, monthNumber);
+  const checkboxes = generateCheckBoxes(name, year);
+  const checkBox2 = checkboxes[1];
+  const menuProps = {
+    name: title,
+    parent: checkBox2,
+    weight: monthNumber,
+  };
+  const authorData = {
+    author: 'moderator',
+    date,
+  };
+
+  return {
+    title,
+    checkBoxes: checkboxes,
+    annoucment,
+    date,
+    menuProps,
+    authorData,
+  };
+};
+
+export const generateTitle = (year: string, monthNumber: string) => {
+  const monthName = getMonthName(monthNumber, false);
   return `${year} - ${monthNumber} (${monthName})`;
 };
 
-const generateAnnoucment = (inputPath: string) => {
-  const title = generateTitle(inputPath);
+const generateCheckBoxes = (name: string, year: string) => {
+  let checkbox1 = '';
+  if (name === 'kbp') {
+    checkbox1 = 'Архив газет Кабардино-Балкарской правды';
+  }
+  const checkbox2 = `Архив ${year} год`;
+  return [checkbox1, checkbox2];
+};
+
+const generateAnnoucment = (title: string) => {
   return `<p>Архив газет: ${title}</p>\n`;
+};
+
+const generateDate = (year: string, monthNumber: string) => {
+  const lastDay = new Date(Number(year), Number(monthNumber), 0);
+  const day = lastDay.getDate();
+  const formattedDate = `${year}-${String(monthNumber).padStart(
+    2,
+    '0',
+  )}-${String(day).padStart(2, '0')}`;
+  const time = '04:20:00 +3000';
+
+  return `${formattedDate} ${time}`;
 };
 
 function getMonthName(monthNumber: string, isGenitive: boolean) {

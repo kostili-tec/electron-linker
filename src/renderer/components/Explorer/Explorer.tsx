@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { getFiles, modifiedFiles } from '../../../main/fs/fileSystem';
 import { ExplorerFile } from './ExplorerFile/ExplorerFile';
-import { generateLinks, generateTitle } from '../../../main/fs/linksGenerator';
+import {
+  generateJson,
+  generateLinks,
+  generateTitle,
+} from '../../../main/fs/linksGenerator';
 
 export function Explorer() {
   const basePath = `\\\\Misha\\архив газет и журналов для сайта\\arhiv\\`;
@@ -31,8 +35,8 @@ export function Explorer() {
   const handleClickGenButton = () => {
     const links = generateLinks(files);
     console.log(links);
-    const title = generateTitle(pathInput);
-    console.log('title', title);
+    const json = generateJson(pathInput);
+    console.log({ ...links, ...json });
   };
 
   const handleClickFile = (newPath: string) => {

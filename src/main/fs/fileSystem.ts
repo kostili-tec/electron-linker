@@ -1,20 +1,25 @@
-const fs = window.require('fs/promises');
+import * as fs from 'fs/promises';
+import path from 'node:path';
 
-export interface file {
+export interface modifiedFiles {
   name: string;
-  'Symbol(type)': 1 | 2 | 0;
+  path: string;
+  isDir: boolean;
 }
 
-export type files = {
-  Dirent: file;
-};
-
-export const getFiles = async (path: string) => {
+export const getFiles = async (pathFiles: string) => {
   try {
-    const result: Promise<Array<files>> = await fs.readdir(path, {
+    const result = await fs.readdir(pathFiles, {
       withFileTypes: true,
     });
-    return result;
+    const modified: modifiedFiles[] = result.map((el) => {
+      return {
+        name: el.name,
+        path: path.resolve(pathFiles, el.name),
+        isDir: el.isDirectory(),
+      };
+    });
+    return modified;
   } catch (error) {
     console.error(error);
   }

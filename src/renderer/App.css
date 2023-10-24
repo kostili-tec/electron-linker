@@ -54,9 +54,38 @@ a:hover {
   text-decoration: none;
 }
 
-.Hello {
+.input {
+  margin-left: 1rem;
+  width: 600px;
+  padding: 4px;
+}
+
+.file {
+  margin: 5px;
+  color: #fce980;
+}
+
+.folder {
+  margin: 5px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.folder:hover {
+  color: #b4b4b4;
+}
+
+.control {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin: 20px 0;
+  justify-content: space-between;
+}
+
+.control-buttons {
+  display: flex;
+  gap: 5px;
+}
+
+.hide {
+  visibility: hidden;
 }

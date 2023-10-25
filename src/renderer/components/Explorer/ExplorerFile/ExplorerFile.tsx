@@ -4,19 +4,24 @@ interface ExplorerFileProps {
   name: string;
   path: string;
   isDir: boolean;
-  onClick: (newPath: string) => void;
+  activeFolder?: string;
+  onClick: (newPath: string, name: string) => void;
 }
 
 export const ExplorerFile: FC<ExplorerFileProps> = ({
   name,
   path,
   isDir,
+  activeFolder,
   onClick,
 }) => {
   return (
     <div style={{ paddingTop: '5px' }}>
       {isDir ? (
-        <p className="folder" onClick={() => onClick(path)}>
+        <p
+          className={activeFolder === name ? `folder folderActive` : 'folder'}
+          onClick={() => onClick(path, name)}
+        >
           {name}
         </p>
       ) : (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import path from 'path';
 import { getFiles, modifiedFiles } from '../../../main/fs/fileSystem';
 import { ExplorerFile } from './ExplorerFile/ExplorerFile';
 import { generateFields, generateLinks } from '../../../main/fs/linksGenerator';
@@ -18,6 +19,7 @@ function Explorer() {
   );
   const [isShowGenerate, setIsShowGenerate] = useState(false);
   const [json, setJson] = useState('');
+  const [activeFolder, setActiveFolder] = useState('');
 
   useEffect(() => {
     window.localStorage.setItem('lastPath', pathInput);
@@ -68,8 +70,9 @@ function Explorer() {
     setJson(generateJson);
   };
 
-  const handleClickFile = async (newPath: string) => {
+  const handleClickFile = async (newPath: string, name: string) => {
     setPathInput(newPath);
+    setActiveFolder(name);
     await handleClickLoadButton();
   };
 
@@ -139,6 +142,7 @@ function Explorer() {
             folders.map((folders) => (
               <ExplorerFile
                 name={folders.name}
+                activeFolder={activeFolder}
                 path={`${folders.path}`}
                 isDir={folders.isDir}
                 onClick={handleClickFile}
@@ -160,8 +164,6 @@ function Explorer() {
         </div>
         <ExplorerTextarea json={json} />
       </div>
-
-      <div />
     </div>
   );
 }

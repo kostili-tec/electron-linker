@@ -46,7 +46,7 @@ export function getFileHref(filePath: string) {
   return normalizedPath;
 }
 
-export function generateFields(inputPath: string) {
+export function generateFields(inputPath: string, synonymName?: string) {
   const splitPath = inputPath.split('\\');
   const { length } = splitPath;
   const monthNumber = splitPath[length - 1];
@@ -57,6 +57,9 @@ export function generateFields(inputPath: string) {
   const date = generateDate(year, monthNumber);
   const checkboxes = generateCheckBoxes(name, year);
   const checkBox2 = checkboxes[1];
+  const createSynonym = synonymName
+    ? `${synonymName}${year}_${monthNumber}`
+    : '';
   const menuProps = {
     name: title,
     parent: checkBox2,
@@ -75,6 +78,7 @@ export function generateFields(inputPath: string) {
     date,
     menuProps,
     authorData,
+    synonym: createSynonym,
   };
 }
 
@@ -87,8 +91,7 @@ function generateCheckBoxes(name: string, year: string) {
   let checkbox1 = '';
   if (name === 'kbp') {
     checkbox1 = 'Архив газет Кабардино-Балкарской правды';
-  } 
-  else {
+  } else {
     checkbox1 = 'Архив газет';
   }
   const checkbox2 = `Архив ${year} год`;

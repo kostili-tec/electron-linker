@@ -69,6 +69,12 @@ a:hover {
   border: 1px solid #fce980;
 }
 
+.input-synonym {
+  padding: 4px;
+  border-radius: 5px;
+  border: 1px solid #fce980;
+}
+
 .file {
   margin: 5px;
   color: #fce980;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+
 import { getFiles, modifiedFiles } from '../../../main/fs/fileSystem';
 import { ExplorerFile } from './ExplorerFile/ExplorerFile';
 import { generateFields, generateLinks } from '../../../main/fs/linksGenerator';
@@ -12,18 +13,25 @@ function Explorer() {
     window.localStorage.getItem('lastPath') ||
       `\\\\Misha\\архив газет и журналов для сайта\\arhiv\\`,
   );
+  const [synonymInput, setSynonymInput] = useState(
+    window.localStorage.getItem('lastSynonym') || '',
+  );
   const [isShowGenerate, setIsShowGenerate] = useState(false);
   const [json, setJson] = useState('');
 
   useEffect(() => {
     window.localStorage.setItem('lastPath', pathInput);
-  }, [pathInput]);
+    window.localStorage.setItem('lastSynonym', synonymInput);
+  }, [pathInput, synonymInput]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const getPathFromLocalStorate = window.localStorage.getItem('lastPath');
+    const getSynonymFromLocalStorate =
+      window.localStorage.getItem('lastSynonym');
     if (getPathFromLocalStorate) setPathInput(getPathFromLocalStorate);
     else setPathInput(basePath);
-  }, [basePath]);
+    if (getSynonymFromLocalStorate) setSynonymInput(getSynonymFromLocalStorate);
+  }, [basePath]); */
 
   useEffect(() => {
     handleClickLoadButton();
@@ -53,7 +61,7 @@ function Explorer() {
 
   const handleClickGenButton = () => {
     const links = generateLinks(files);
-    const filelds = generateFields(pathInput);
+    const filelds = generateFields(pathInput, synonymInput);
     const joinObjects = { ...links, ...filelds };
     console.log(joinObjects);
     const generateJson = JSON.stringify(joinObjects);
@@ -76,6 +84,12 @@ function Explorer() {
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPathInput(e.currentTarget.value);
+  };
+
+  const handleChangeSysnonymInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setSynonymInput(e.currentTarget.value);
   };
 
   const handleClickResetButton = () => {
@@ -110,6 +124,13 @@ function Explorer() {
           <button type="button" onClick={handleClickResetButton}>
             Reset
           </button>
+          <input
+            type="text"
+            className="input-synonym"
+            onChange={handleChangeSysnonymInput}
+            value={synonymInput}
+            placeholder="синоним"
+          />
         </div>
       </div>
       <div className="explorer-content">

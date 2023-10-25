@@ -25,9 +25,10 @@ export function generateLinks(files: modifiedFiles[]) {
     const href = getFileHref(file.path);
     const splitHref = href.split('/');
     const day = splitHref[splitHref.length - 1].split('.')[0];
+    const correctDay = day.replace(/^0+/, '');
     const monthNumber = splitHref[splitHref.length - 2];
     const monthName = getMonthName(monthNumber, true);
-    const correctLink = generateLink(href, day, monthName!);
+    const correctLink = generateLink(href, correctDay, monthName!);
     links += correctLink;
 
     if (length > index) {

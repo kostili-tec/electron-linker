@@ -4,11 +4,11 @@ type MonthNames = {
   [key: string]: string;
 };
 
-export const generateLink = (
+export function generateLink(
   href: string,
   day: string | number,
   month: string,
-) => {
+) {
   const link1 = `<p><a href="`;
   const link2 = `"><span style="font-size:16px">`;
   const link3 = `</span></a></p>`;
@@ -16,11 +16,12 @@ export const generateLink = (
   const result = `${link1}${href}${link2}${day}&nbsp;${month}${link3}`;
 
   return result;
-};
+}
 
-export const generateLinks = (files: modifiedFiles[]) => {
+export function generateLinks(files: modifiedFiles[]) {
   let links = '';
-  files.forEach((file) => {
+  const length = files.length - 1;
+  files.forEach((file, index) => {
     const href = getFileHref(file.path);
     const splitHref = href.split('/');
     const day = splitHref[splitHref.length - 1].split('.')[0];
@@ -28,21 +29,24 @@ export const generateLinks = (files: modifiedFiles[]) => {
     const monthName = getMonthName(monthNumber, true);
     const correctLink = generateLink(href, day, monthName!);
     links += correctLink;
-    links += '\n\n';
-    links += `<hr />\n`;
+
+    if (length > index) {
+      links += '\n\n';
+      links += `<hr />\n`;
+    }
   });
   const linksObject = { links };
   return linksObject;
-};
+}
 
-export const getFileHref = (filePath: string) => {
+export function getFileHref(filePath: string) {
   const startIndex = filePath.indexOf('\\arhiv');
   const outputPath = filePath.substring(startIndex);
   const normalizedPath = outputPath.replace(/\\/g, '/');
   return normalizedPath;
-};
+}
 
-export const generateFields = (inputPath: string) => {
+export function generateFields(inputPath: string) {
   const splitPath = inputPath.split('\\');
   const { length } = splitPath;
   const monthNumber = splitPath[length - 1];
@@ -72,27 +76,30 @@ export const generateFields = (inputPath: string) => {
     menuProps,
     authorData,
   };
-};
+}
 
-export const generateTitle = (year: string, monthNumber: string) => {
+function generateTitle(year: string, monthNumber: string) {
   const monthName = getMonthName(monthNumber, false);
   return `${year} - ${monthNumber} (${monthName})`;
-};
+}
 
-const generateCheckBoxes = (name: string, year: string) => {
+function generateCheckBoxes(name: string, year: string) {
   let checkbox1 = '';
   if (name === 'kbp') {
     checkbox1 = 'Архив газет Кабардино-Балкарской правды';
+  } 
+  else {
+    checkbox1 = 'Архив газет';
   }
   const checkbox2 = `Архив ${year} год`;
   return [checkbox1, checkbox2];
-};
+}
 
-const generateAnnoucment = (title: string) => {
+function generateAnnoucment(title: string) {
   return `<p>Архив газет: ${title}</p>\n`;
-};
+}
 
-const generateDate = (year: string, monthNumber: string) => {
+function generateDate(year: string, monthNumber: string) {
   const lastDay = new Date(Number(year), Number(monthNumber), 0);
   const day = lastDay.getDate();
   const formattedDate = `${year}-${String(monthNumber).padStart(
@@ -102,7 +109,7 @@ const generateDate = (year: string, monthNumber: string) => {
   const time = '04:20:00 +0300';
 
   return `${formattedDate} ${time}`;
-};
+}
 
 function getMonthName(monthNumber: string, isGenitive: boolean) {
   const monthNames: MonthNames = {

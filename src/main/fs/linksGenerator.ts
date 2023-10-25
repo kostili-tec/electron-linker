@@ -10,10 +10,10 @@ export const generateLink = (
   month: string,
 ) => {
   const link1 = `<p><a href="`;
-  const link2 = `"><span style="font-size:16px">&nbsp;`;
+  const link2 = `"><span style="font-size:16px">`;
   const link3 = `</span></a></p>`;
 
-  const result = `${link1}${href}${link2}${day}&nbsp${month}${link3}`;
+  const result = `${link1}${href}${link2}${day}&nbsp;${month}${link3}`;
 
   return result;
 };
@@ -48,8 +48,6 @@ export const generateFields = (inputPath: string) => {
   const monthNumber = splitPath[length - 1];
   const year = splitPath[length - 3];
   const name = splitPath[length - 2];
-
-  console.log(generateDate(year, monthNumber));
   const title = generateTitle(year, monthNumber);
   const annoucment = generateAnnoucment(title);
   const date = generateDate(year, monthNumber);
@@ -58,7 +56,8 @@ export const generateFields = (inputPath: string) => {
   const menuProps = {
     name: title,
     parent: checkBox2,
-    weight: monthNumber,
+    weight:
+      monthNumber.split('')[0] === '0' ? monthNumber.split('')[1] : monthNumber,
   };
   const authorData = {
     author: 'moderator',
@@ -100,7 +99,7 @@ const generateDate = (year: string, monthNumber: string) => {
     2,
     '0',
   )}-${String(day).padStart(2, '0')}`;
-  const time = '04:20:00 +3000';
+  const time = '04:20:00 +0300';
 
   return `${formattedDate} ${time}`;
 };

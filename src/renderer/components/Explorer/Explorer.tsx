@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import path from 'path';
 import { getFiles, modifiedFiles } from '../../../main/fs/fileSystem';
 import { ExplorerFile } from './ExplorerFile/ExplorerFile';
 import { generateFields, generateLinks } from '../../../main/fs/linksGenerator';
@@ -26,14 +25,9 @@ function Explorer() {
     window.localStorage.setItem('lastSynonym', synonymInput);
   }, [pathInput, synonymInput]);
 
-  /* useEffect(() => {
-    const getPathFromLocalStorate = window.localStorage.getItem('lastPath');
-    const getSynonymFromLocalStorate =
-      window.localStorage.getItem('lastSynonym');
-    if (getPathFromLocalStorate) setPathInput(getPathFromLocalStorate);
-    else setPathInput(basePath);
-    if (getSynonymFromLocalStorate) setSynonymInput(getSynonymFromLocalStorate);
-  }, [basePath]); */
+  useEffect(() => {
+    generateJson();
+  }, [files]);
 
   useEffect(() => {
     handleClickLoadButton();
@@ -42,6 +36,18 @@ function Explorer() {
   const checkIsFiles = (localFiles: modifiedFiles[]) => {
     return localFiles.every((file) => file.isDir === false);
   };
+
+  const generateJson = () => {
+    if (files.length > 0) {
+      const links = generateLinks(files);
+      const filelds = generateFields(pathInput, synonymInput);
+      const joinObjects = { ...links, ...filelds };
+      console.log(joinObjects);
+      const generatedJson = JSON.stringify(joinObjects);
+      setJson(generatedJson);
+    }
+  };
+
   const handleClickLoadButton = async () => {
     try {
       const localFiles = await getFiles(pathInput);
@@ -62,12 +68,7 @@ function Explorer() {
   };
 
   const handleClickGenButton = () => {
-    const links = generateLinks(files);
-    const filelds = generateFields(pathInput, synonymInput);
-    const joinObjects = { ...links, ...filelds };
-    console.log(joinObjects);
-    const generateJson = JSON.stringify(joinObjects);
-    setJson(generateJson);
+    generateJson();
   };
 
   const handleClickFile = async (newPath: string, name: string) => {
@@ -83,6 +84,8 @@ function Explorer() {
     }
     const result = pathInput.substring(0, lastIndex);
     setPathInput(result);
+    setIsShowGenerate(false);
+    setJson('');
   };
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {

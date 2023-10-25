@@ -7,6 +7,7 @@ import { ExplorerTextarea } from './ExplorerTextarea/ExplorerTextarea';
 function Explorer() {
   const basePath = `\\\\Misha\\архив газет и журналов для сайта\\arhiv\\`;
   const [files, setFiles] = useState<modifiedFiles[]>([]);
+  const [folders, setFolders] = useState<modifiedFiles[]>([]);
   const [pathInput, setPathInput] = useState(
     window.localStorage.getItem('lastPath') ||
       `\\\\Misha\\архив газет и журналов для сайта\\arhiv\\`,
@@ -20,21 +21,30 @@ function Explorer() {
 
   useEffect(() => {
     const getPathFromLocalStorate = window.localStorage.getItem('lastPath');
-    console.log('local', getPathFromLocalStorate);
     if (getPathFromLocalStorate) setPathInput(getPathFromLocalStorate);
     else setPathInput(basePath);
-  }, []);
+  }, [basePath]);
 
-  const checkFiles = (files: modifiedFiles[]) => {
-    const cheskIsFiles = files.every((file) => file.isDir === false);
-    setIsShowGenerate(cheskIsFiles);
+  useEffect(() => {
+    handleClickLoadButton();
+  }, [pathInput]);
+
+  const checkIsFiles = (localFiles: modifiedFiles[]) => {
+    return localFiles.every((file) => file.isDir === false);
   };
   const handleClickLoadButton = async () => {
     try {
-      const files = await getFiles(pathInput);
-      if (files) {
-        setFiles(files);
-        checkFiles(files);
+      const localFiles = await getFiles(pathInput);
+      if (localFiles) {
+        const isFiles = checkIsFiles(localFiles);
+
+        if (isFiles) {
+          setFiles(localFiles);
+          setIsShowGenerate(isFiles);
+        } else {
+          setFolders(localFiles);
+          setFiles([]);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -46,13 +56,13 @@ function Explorer() {
     const filelds = generateFields(pathInput);
     const joinObjects = { ...links, ...filelds };
     console.log(joinObjects);
-    const json = JSON.stringify(joinObjects);
-    setJson(json);
+    const generateJson = JSON.stringify(joinObjects);
+    setJson(generateJson);
   };
 
-  const handleClickFile = (newPath: string) => {
+  const handleClickFile = async (newPath: string) => {
     setPathInput(newPath);
-    handleClickLoadButton();
+    await handleClickLoadButton();
   };
 
   const handleClickBack = () => {
@@ -68,12 +78,19 @@ function Explorer() {
     setPathInput(e.currentTarget.value);
   };
 
+  const handleClickResetButton = () => {
+    setPathInput(basePath);
+  };
+
   return (
     <div>
       <div className="control">
         <div className="control-buttons">
-          <button onClick={handleClickLoadButton}>Load</button>
+          <button type="button" onClick={handleClickLoadButton}>
+            Load
+          </button>
           <button
+            type="button"
             onClick={handleClickGenButton}
             className={isShowGenerate ? '' : 'hide'}
           >
@@ -81,16 +98,33 @@ function Explorer() {
           </button>
         </div>
         <div className="input-container">
+          <button type="button" onClick={handleClickBack}>
+            ⇦
+          </button>
           <input
             type="text"
             className="input"
             value={pathInput}
             onChange={handleChangeInput}
           />
-          <button onClick={handleClickBack}>⇦</button>
+          <button type="button" onClick={handleClickResetButton}>
+            Reset
+          </button>
         </div>
       </div>
       <div className="explorer-content">
+        <div className="explorer-files">
+          {folders.length > 0 &&
+            folders.map((folders) => (
+              <ExplorerFile
+                name={folders.name}
+                path={`${folders.path}`}
+                isDir={folders.isDir}
+                onClick={handleClickFile}
+                key={folders.name}
+              />
+            ))}
+        </div>
         <div className="explorer-files">
           {files.length > 0 &&
             files.map((file) => (

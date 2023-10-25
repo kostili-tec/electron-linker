@@ -55,14 +55,14 @@ a:hover {
 }
 
 .input-container {
+  margin-left: 1rem;
   display: flex;
-  gap: 1rem;
   justify-content: center;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .input {
-  margin-left: 1rem;
   width: 600px;
   padding: 4px;
   border-radius: 5px;

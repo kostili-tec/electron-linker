@@ -14,8 +14,9 @@ export const getFiles = async (pathFiles: string) => {
     });
 
     const filteredResult = result.filter((file) => {
-      const fileName = path.basename(file.name).split('.')[0];
-      return !fileName.includes('d');
+      const fileName = path.basename(file.name).split('.');
+      if (fileName.length > 1) return !fileName[0].includes('d');
+      return fileName[0];
     });
     const modified: modifiedFiles[] = filteredResult.map((el) => {
       return {

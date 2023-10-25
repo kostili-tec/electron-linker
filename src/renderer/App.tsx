@@ -1,8 +1,6 @@
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
-// import icon from '../../assets/icon.svg';
+import Explorer from './components/Explorer/Explorer';
 import './App.css';
-import { Inputs } from './components/Inputs/Inputs';
-import { Explorer } from './components/Explorer/Explorer';
 
 function Hello() {
   return (

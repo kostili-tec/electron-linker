@@ -1,21 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getFiles, modifiedFiles } from '../../../main/fs/fileSystem';
 import { ExplorerFile } from './ExplorerFile/ExplorerFile';
-import {
-  generateFields,
-  generateLinks,
-  generateTitle,
-} from '../../../main/fs/linksGenerator';
+import { generateFields, generateLinks } from '../../../main/fs/linksGenerator';
 import { ExplorerTextarea } from './ExplorerTextarea/ExplorerTextarea';
 
-export function Explorer() {
+function Explorer() {
   const basePath = `\\\\Misha\\архив газет и журналов для сайта\\arhiv\\`;
   const [files, setFiles] = useState<modifiedFiles[]>([]);
   const [pathInput, setPathInput] = useState(
-    `\\\\Misha\\архив газет и журналов для сайта\\arhiv\\`,
+    window.localStorage.getItem('lastPath') ||
+      `\\\\Misha\\архив газет и журналов для сайта\\arhiv\\`,
   );
   const [isShowGenerate, setIsShowGenerate] = useState(false);
   const [json, setJson] = useState('');
+
+  useEffect(() => {
+    window.localStorage.setItem('lastPath', pathInput);
+  }, [pathInput]);
+
+  useEffect(() => {
+    const getPathFromLocalStorate = window.localStorage.getItem('lastPath');
+    console.log('local', getPathFromLocalStorate);
+    if (getPathFromLocalStorate) setPathInput(getPathFromLocalStorate);
+    else setPathInput(basePath);
+  }, []);
 
   const checkFiles = (files: modifiedFiles[]) => {
     const cheskIsFiles = files.every((file) => file.isDir === false);
@@ -25,7 +33,6 @@ export function Explorer() {
     try {
       const files = await getFiles(pathInput);
       if (files) {
-        console.log(files);
         setFiles(files);
         checkFiles(files);
       }
@@ -36,15 +43,14 @@ export function Explorer() {
 
   const handleClickGenButton = () => {
     const links = generateLinks(files);
-    console.log(links);
     const filelds = generateFields(pathInput);
-
-    const json = JSON.stringify({ ...links, ...filelds });
+    const joinObjects = { ...links, ...filelds };
+    console.log(joinObjects);
+    const json = JSON.stringify(joinObjects);
     setJson(json);
   };
 
   const handleClickFile = (newPath: string) => {
-    console.log(pathInput);
     setPathInput(newPath);
     handleClickLoadButton();
   };
@@ -104,3 +110,5 @@ export function Explorer() {
     </div>
   );
 }
+
+export default Explorer;

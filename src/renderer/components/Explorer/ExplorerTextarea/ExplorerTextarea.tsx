@@ -16,7 +16,7 @@ export const ExplorerTextarea: FC<ExplorerTextareaProps> = ({ json }) => {
   };
   return (
     <div className="textarea-container">
-      <textarea className="textarea" rows={22} cols={55} value={value} />
+      <textarea className="textarea" rows={22} cols={55} defaultValue={value} />
       <button onClick={handleClickCopy}>Copy</button>
     </div>
   );
